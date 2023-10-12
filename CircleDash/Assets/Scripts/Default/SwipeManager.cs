@@ -8,10 +8,7 @@ public class SwipeManager : MonoBehaviour
     private Vector2 fingerUpPosition;
 
     [SerializeField]
-    private bool detectSwipeOnlyAfterRelease = false;
-
-    [SerializeField]
-    private float minSwipeDistance = 20f;
+    private float minSwipeDistance = 5f;
 
     // Event to be triggered when a swipe is detected
     public delegate void OnSwipeDetected(SwipeDirection direction);
@@ -33,27 +30,16 @@ public class SwipeManager : MonoBehaviour
 
     private void DetectSwipe()
     {
-        if (Input.touchCount > 0)
+        if (Input.GetMouseButtonDown(0))
         {
-            Touch touch = Input.GetTouch(0);
+            fingerDownPosition = Input.mousePosition;
+            fingerUpPosition = Input.mousePosition;
+        }
 
-            if (touch.phase == TouchPhase.Began)
-            {
-                fingerDownPosition = touch.position;
-                fingerUpPosition = touch.position;
-            }
-
-            if (!detectSwipeOnlyAfterRelease && touch.phase == TouchPhase.Moved)
-            {
-                fingerUpPosition = touch.position;
-                CheckSwipe();
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                fingerUpPosition = touch.position;
-                CheckSwipe();
-            }
+        if (Input.GetMouseButtonUp(0))
+        {
+            fingerUpPosition = Input.mousePosition;
+            CheckSwipe();
         }
     }
 
