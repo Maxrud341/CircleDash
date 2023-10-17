@@ -44,18 +44,21 @@ public class SwipeManager : MonoBehaviour
     }
 
     private void CheckSwipe()
+{
+    Vector2 swipeDirection = fingerUpPosition - fingerDownPosition;
+
+    if (swipeDirection.magnitude > minSwipeDistance)
     {
-        if (IsVerticalSwipe())
-        {
-            SwipeDirection direction = (fingerUpPosition.y - fingerDownPosition.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
-            SwipeDetected?.Invoke(direction);
-        }
-        else if (IsHorizontalSwipe())
-        {
-            SwipeDirection direction = (fingerUpPosition.x - fingerDownPosition.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
-            SwipeDetected?.Invoke(direction);
-        }
+        SwipeDirection direction;
+
+        if (Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y))
+            direction = (swipeDirection.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
+        else
+            direction = (swipeDirection.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
+
+        SwipeDetected?.Invoke(direction);
     }
+}
 
     private bool IsVerticalSwipe()
     {
