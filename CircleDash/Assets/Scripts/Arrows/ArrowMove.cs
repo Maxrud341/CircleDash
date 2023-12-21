@@ -8,10 +8,8 @@ public class ArrowMove : MonoBehaviour
 
     void Update()
     {
-        // Движение влево
         Vector3 movement = Vector3.left * speed * Time.deltaTime;
 
-        // Перемещаем объект
-        transform.Translate(movement);
+        transform.Translate(movement, Space.World);
     }
 }
