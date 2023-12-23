@@ -6,7 +6,7 @@ public class ArrowMove : MonoBehaviour
 {
     public float speed = 5.0f;
 
-    void Update()
+    void FixedUpdate()
     {
         Vector3 movement = Vector3.left * speed * Time.deltaTime;
 

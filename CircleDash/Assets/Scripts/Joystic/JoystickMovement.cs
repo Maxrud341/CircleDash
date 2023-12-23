@@ -3,11 +3,13 @@ using UnityEngine;
 public class JoystickMovement : MonoBehaviour
 {
     [SerializeField]
-    private float maxDistance = 5f;
+    private float maxDistance = 8f;
 
     private Vector3 initialObjectPosition3D;
     private Vector2 initialObjectPosition2D;
     private bool isMousePressed = false;
+
+    public DetectHit detectHit;
 
     void Start()
     {
@@ -55,19 +57,19 @@ public class JoystickMovement : MonoBehaviour
         {
             case SwipeManager.SwipeDirection.Up:
                 Debug.Log("Swipe up detected.");
-                // Обработка свайпа вверх
-                break;
-            case SwipeManager.SwipeDirection.Down:
-                Debug.Log("Swipe down detected.");
-                // Обработка свайпа вниз
-                break;
-            case SwipeManager.SwipeDirection.Left:
-                Debug.Log("Swipe left detected.");
-                // Обработка свайпа влево
+                detectHit.tryDirection(1);
                 break;
             case SwipeManager.SwipeDirection.Right:
+                Debug.Log("Swipe down detected.");
+                detectHit.tryDirection(2);
+                break;
+            case SwipeManager.SwipeDirection.Down:
+                Debug.Log("Swipe left detected.");
+                detectHit.tryDirection(3);
+                break;
+            case SwipeManager.SwipeDirection.Left:
                 Debug.Log("Swipe right detected.");
-                // Обработка свайпа вправо
+                detectHit.tryDirection(4);
                 break;
         }
     } 

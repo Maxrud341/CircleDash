@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Destroyer : MonoBehaviour
@@ -8,9 +7,10 @@ public class Destroyer : MonoBehaviour
     public GameObject arrowsGenerator;
     public PlatesReaction platesReaction;
 
-    private GameObject currentArrow;
+    public GameObject currentArrow;
+    public int direction;
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (arrowsGenerator.transform.childCount == 0)
             platesReaction.resetPlates();
@@ -30,7 +30,7 @@ public class Destroyer : MonoBehaviour
                 currentArrow = arrowsGenerator.transform.GetChild(0).gameObject;
                 manageRangeArrow2Trap.arrow = currentArrow;
                 float rotationZ = currentArrow.transform.rotation.eulerAngles.z;
-                int direction = GetDirectionFromRotation(rotationZ);
+                direction = GetDirectionFromRotation(rotationZ);
                 platesReaction.switchPlate(direction);
                 yield return StartCoroutine(WaitForArrowDestroy());
             }

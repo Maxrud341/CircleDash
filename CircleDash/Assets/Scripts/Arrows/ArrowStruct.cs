@@ -10,7 +10,7 @@ public class ArrowStruct : MonoBehaviour
     [System.Serializable]
     public struct Arrow{
         public GameObject arrow;
-        public int derection;
+        public int direction;
         public float delay;
     }
 

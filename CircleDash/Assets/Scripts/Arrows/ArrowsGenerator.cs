@@ -8,7 +8,12 @@ public class ArrowsGenerator : MonoBehaviour
     public Arrow[] arrows;
     void Start()
     {
-        StartCoroutine(SpawnArrowsWithDelay());
+       
+    }
+
+    public void GenerateMap(Arrow[] arrowsMap){
+        arrows = arrowsMap;
+        StartCoroutine(SpawnArrowsWithDelay());    
     }
 
     private IEnumerator SpawnArrowsWithDelay()
@@ -25,23 +30,19 @@ public class ArrowsGenerator : MonoBehaviour
     {
         Quaternion rotation = Quaternion.Euler(0, 0, 0);
 
-        switch (arrow.derection)
+        switch (arrow.direction)
         {
             case 1:
                 rotation = Quaternion.Euler(0, 0, 0);
-                Debug.Log("up");
                 break;
             case 2:
                 rotation = Quaternion.Euler(0, 0, -90);
-                Debug.Log("right");
                 break;
             case 3:
                 rotation = Quaternion.Euler(0, 0, -180);
-                Debug.Log("down");
                 break;
             case 4:
                 rotation = Quaternion.Euler(0, 0, -270);
-                Debug.Log("left");
                 break;
             default:
                 rotation = Quaternion.Euler(0, 0, 0);

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlatesReaction : MonoBehaviour
 {
+    public ManageRangeArrow2Trap manageRangeArrow2Trap;
+
     public GameObject topPlate;
     public GameObject rightPlate;
     public GameObject botPlate;
@@ -32,7 +34,8 @@ public class PlatesReaction : MonoBehaviour
     {
         if (plateSwiched)
         {
-            if(transitionValue < 0.15){
+            transitionValue = manageRangeArrow2Trap.normalizedDistance;
+            if(transitionValue < 0.1){
                 currentPlateSR.color = Color.green;
             }else{
                 currentPlateSR.color = Color.Lerp(Color.yellow, Color.red, transitionValue);
