@@ -18,6 +18,7 @@ public class PlatesReaction : MonoBehaviour
     private SpriteRenderer leftPlateSR;
 
     private SpriteRenderer currentPlateSR;
+    public Color plateColor;
 
 
     private bool plateSwiched = false;
@@ -35,10 +36,12 @@ public class PlatesReaction : MonoBehaviour
         if (plateSwiched)
         {
             transitionValue = manageRangeArrow2Trap.normalizedDistance;
-            if(transitionValue < 0.1){
-                currentPlateSR.color = Color.green;
+            if(transitionValue < 0.15){
+                plateColor = Color.green;
+                currentPlateSR.color = plateColor;
             }else{
-                currentPlateSR.color = Color.Lerp(Color.yellow, Color.red, transitionValue);
+                plateColor = Color.Lerp(Color.yellow, Color.red, transitionValue);
+                currentPlateSR.color = plateColor;
 
             }
         }
