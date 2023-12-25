@@ -22,7 +22,7 @@ public class MapGenerator : MonoBehaviour
         bitDelay = 60f / bpm;
         Debug.Log(bitDelay);
 
-        numberOfBeats = (int)(songLength / bitDelay);
+        numberOfBeats = (int)(songLength / bitDelay)-20;
         Debug.Log(numberOfBeats);
 
         ArrowMap = GenerateArrowMap(bitDelay, numberOfBeats, arrowGO);
@@ -41,7 +41,7 @@ public class MapGenerator : MonoBehaviour
 
             ArrowMap[i] = arrow;
         }
-
+        ArrowMap[0].delay = 0;
         return ArrowMap;
 
     }

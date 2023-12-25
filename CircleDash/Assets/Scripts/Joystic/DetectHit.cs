@@ -14,6 +14,7 @@ public class DetectHit : MonoBehaviour
     public ParticleSystem[] platesParticles;
     public Animator[] plateAnimators;
 
+
     public void tryDirection(int direction)
     {
         hitScore = (int)((1 - manageRangeArrow2Trap.normalizedDistance) * 100);
@@ -24,33 +25,15 @@ public class DetectHit : MonoBehaviour
             score.EditScore(hitScore);
             audioSource.Play();
             Destroy(destroyer.currentArrow);
-            switch (direction)
-            {
-                case 1:
-                    plateAnimators[0].SetTrigger("Plate Hitted");
-                    platesParticles[0].startColor = platesReaction.plateColor;
-                    platesParticles[0].Play();
-                    break;
-                case 2:
-                    plateAnimators[1].SetTrigger("Plate Hitted");
-                    platesParticles[1].startColor = platesReaction.plateColor;
-                    platesParticles[1].Play();
-                    break;
-                case 3:
-                    plateAnimators[2].SetTrigger("Plate Hitted");
-                    platesParticles[2].startColor = platesReaction.plateColor;
-                    platesParticles[2].Play();
-                    break;
-                case 4:
-                    plateAnimators[3].SetTrigger("Plate Hitted");
-                    platesParticles[3].startColor = platesReaction.plateColor;
-                    platesParticles[3].Play();
-                    break;
-                default:
-                    Debug.Log("ERROR DIRECTION ARROW");
-                    break;
-            }
+            OnPlateHitted(direction);
         }
+    }
+
+    public void OnPlateHitted(int direction)
+    {
+        plateAnimators[direction-1].SetTrigger("Plate Hitted");
+        platesParticles[direction-1].startColor = platesReaction.plateColor;
+        platesParticles[direction-1].Play();
     }
 
 }

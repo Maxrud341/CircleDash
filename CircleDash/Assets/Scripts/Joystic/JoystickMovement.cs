@@ -3,7 +3,7 @@ using UnityEngine;
 public class JoystickMovement : MonoBehaviour
 {
     [SerializeField]
-    private float maxDistance = 8f;
+    private float maxDistance = 4f;
 
     private Vector3 initialObjectPosition3D;
     private Vector2 initialObjectPosition2D;
