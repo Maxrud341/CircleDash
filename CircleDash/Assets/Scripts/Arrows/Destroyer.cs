@@ -6,6 +6,7 @@ public class Destroyer : MonoBehaviour
     public ManageRangeArrow2Trap manageRangeArrow2Trap;
     public GameObject arrowsGenerator;
     public PlatesReaction platesReaction;
+    public ArrowReaction arrowReaction;
 
     public GameObject currentArrow;
     public int direction;
@@ -28,10 +29,15 @@ public class Destroyer : MonoBehaviour
             if (arrowsGenerator.transform.childCount > 0)
             {
                 currentArrow = arrowsGenerator.transform.GetChild(0).gameObject;
+
                 manageRangeArrow2Trap.arrow = currentArrow;
+
                 float rotationZ = currentArrow.transform.rotation.eulerAngles.z;
                 direction = GetDirectionFromRotation(rotationZ);
+
+                arrowReaction.ArrowsReaction(currentArrow);
                 platesReaction.switchPlate(direction);
+                
                 yield return StartCoroutine(WaitForArrowDestroy());
             }
 
