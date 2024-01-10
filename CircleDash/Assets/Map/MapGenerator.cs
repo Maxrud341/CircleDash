@@ -41,7 +41,7 @@ public class MapGenerator : MonoBehaviour
 
             ArrowMap[i] = arrow;
         }
-        ArrowMap[0].delay = 0;
+        // ArrowMap[0].delay = 0;
         return ArrowMap;
 
     }
