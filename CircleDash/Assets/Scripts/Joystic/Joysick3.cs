@@ -7,7 +7,7 @@ public class Joystick3 : MonoBehaviour
     public DetectHit detectHit;
 
     public bool detectSwipeOnlyAfterRelease = false;
-    public float minSwipeDistance = 0.2f;
+    public float minSwipeDistance = 3f;
 
     void Update()
     {

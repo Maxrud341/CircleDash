@@ -8,7 +8,7 @@ public class SwipeManager : MonoBehaviour
     private Vector2 fingerUpPosition;
 
     [SerializeField]
-    private float minSwipeDistance = 0;
+    private float minSwipeDistance = 100;
 
     // Event to be triggered when a swipe is detected
     public delegate void OnSwipeDetected(SwipeDirection direction);
