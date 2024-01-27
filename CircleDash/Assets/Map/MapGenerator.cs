@@ -14,6 +14,7 @@ public class MapGenerator : MonoBehaviour
 
     public GameObject arrowGO;
     public Arrow[] ArrowMap;
+    public AudioSource audioSource;
 
     private void Start() {
         int songLength = (int)track.length;
@@ -27,6 +28,8 @@ public class MapGenerator : MonoBehaviour
 
         ArrowMap = GenerateArrowMap(bitDelay, numberOfBeats, arrowGO);
         arrowsGenerator.GenerateMap(ArrowMap);
+        audioSource.clip = track;
+        audioSource.Play();
     }
 
     public static Arrow[] GenerateArrowMap(float bitDelay, int numberOfBeats, GameObject arrowGO){
