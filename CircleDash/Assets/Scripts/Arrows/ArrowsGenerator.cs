@@ -24,7 +24,7 @@ public class ArrowsGenerator : MonoBehaviour
     private void CreateArrow(Arrow arrow)
     {
         Quaternion rotation = Quaternion.Euler(0, 0, -90 * (arrow.direction - 1));
-
+        
         GameObject newArrow = Instantiate(arrow.arrow, transform.position, rotation, transform);
     }
 }

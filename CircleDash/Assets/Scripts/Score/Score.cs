@@ -12,6 +12,7 @@ public class Score : MonoBehaviour
         scoreText = GetComponent<TextMeshProUGUI>();
         animator = GetComponent<Animator>();
     }
+    
     public void EditScore(int hitScore){
         score += hitScore;
         scoreText.text = score.ToString();

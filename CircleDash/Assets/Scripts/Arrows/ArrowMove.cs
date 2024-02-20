@@ -13,3 +13,4 @@ public class ArrowMove : MonoBehaviour
         transform.Translate(movement, Space.World);
     }
 }
+ 

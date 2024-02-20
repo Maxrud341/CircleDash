@@ -10,6 +10,7 @@ public class Destroyer : MonoBehaviour
 
     public GameObject currentArrow;
     public int direction;
+    public Miss miss;
 
     private void FixedUpdate()
     {
@@ -56,6 +57,7 @@ public class Destroyer : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Destroy(other.gameObject);
+        miss.OnMiss();
         currentArrow = null;
     }
 

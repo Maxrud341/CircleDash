@@ -13,8 +13,8 @@ public class DetectHit : MonoBehaviour
 
     public void tryDirection(int direction)
     {
-        hitScore = (int)((1 - manageRangeArrow2Trap.normalizedDistance) * 100);
-        if (hitScore > 70 && destroyer.direction == direction)
+        hitScore = (int)((1 - manageRangeArrow2Trap.normalizedDistance) * 10);
+        if (hitScore > 7 && destroyer.direction == direction)
         {
             onHit.OnSuccessHit(direction, hitScore);
             Destroy(destroyer.currentArrow);

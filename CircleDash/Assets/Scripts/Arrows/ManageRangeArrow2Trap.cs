@@ -8,12 +8,16 @@ public class ManageRangeArrow2Trap : MonoBehaviour
     public GameObject trap;
     public PlatesReaction platesReaction;
     public float normalizedDistance;
+
+    private void Start() {
+    }
     void Update()
     {
         if (arrow != null)
         {
             float distance = Vector2.Distance(arrow.transform.position, trap.transform.position);
             normalizedDistance = Mathf.Clamp01(distance / 2.5f);
+
         }
     }
 }

@@ -6109,8 +6109,8 @@ Transform:
   m_Children:
   - {fileID: 1296332382}
   - {fileID: 1963803294}
-  - {fileID: 1039370447}
   - {fileID: 1029986921}
+  - {fileID: 1039370447}
   m_Father: {fileID: 1023766474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &550174245
@@ -6701,6 +6701,7 @@ MonoBehaviour:
   arrowGO: {fileID: 9158484031129548644, guid: d777999d98e6ad24585cd1ece71bceee, type: 3}
   ArrowMap: []
   audioSource: {fileID: 1384941886}
+  arrows: {fileID: 1039370445}
 --- !u!1 &827612047
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class OnHit : MonoBehaviour
@@ -8,18 +9,21 @@ public class OnHit : MonoBehaviour
     public Score score;
     public PlatesReaction platesReaction;
     public AudioSource SuccessFX;
-    public AudioSource UnsuccessFX;
 
     public ParticleSystem[] platesParticles;
     public ParticleSystem arrowHit;
     public Animator[] plateAnimators;
     public Animator circle;
     public Animator bg;
+    public Miss miss;
+    public ComboScript comboScript;
+
 
 
     public void OnSuccessHit(int direction, int hitScore)
     {
-        score.EditScore(hitScore);
+        comboScript.AddCombo();
+        score.EditScore(hitScore*comboScript.combo);
 
 
         SuccessFX.Play();
@@ -40,13 +44,14 @@ public class OnHit : MonoBehaviour
         arrowHit.startColor = platesReaction.plateColor;
         
 
-
+        
 
     }
 
     public void OnUnsuccessHit(int direction, int hitScore){
-
-        UnsuccessFX.Play();
+        comboScript.ResetCombo();
+        miss.OnMiss();
+        
 
         circle.SetTrigger(direction.ToString());
 

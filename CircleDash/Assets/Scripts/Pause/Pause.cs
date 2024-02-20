@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 public class Pause : MonoBehaviour
 {
     public GameObject menuCanvas;
+    public GameObject LoseCanv;
     public AudioSource music;
     public Joystick3 joystick3;
-    public int mapIndex = 1;
+    public int sceneNum;
     public void OpenMenu(){
         menuCanvas.SetActive(true);
     }
@@ -33,10 +34,14 @@ public class Pause : MonoBehaviour
     }
 
     public void RestartGame(){
-        SceneManager.LoadScene(mapIndex);
+        SceneManager.LoadScene(sceneNum);
     }
 
     public void Test(){
         Debug.Log("Test");
+    }
+
+    public void OpenLoseCanv(){
+        LoseCanv.SetActive(true);
     }
 }
