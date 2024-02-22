@@ -11,11 +11,13 @@ public class Miss : MonoBehaviour
     public AudioSource UnsuccessFX;
     public AudioSource UnMissFX;
     public ComboScript comboScript;
+    public End end;
 
     public void OnMiss()
     {
         if (!TemporaryImmortal)
         {
+            end.misses++;
             comboScript.ResetCombo();
             UnsuccessFX.Play();
             if (num < 0) num = 0;
@@ -55,6 +57,8 @@ public class Miss : MonoBehaviour
     {
         pause.PauseGame();
         pause.OpenLoseCanv();
+        pause.CloseMenuIco();
+        pause.MusicPause();
     }
 
     IEnumerator TemporaryImmortality()

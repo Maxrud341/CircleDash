@@ -23,14 +23,19 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    public static IEnumerator RepeatCoroutineFunction(int numberOfBeats, float bitDelay, GameObject arrows)
+    public static IEnumerator RepeatCoroutineFunction(int numberOfBeats, float bitDelay, GameObject arrows, Animator[] animators)
     {
-        for (int i = 0; i < numberOfBeats; i++)
+        while(true)
         {
             yield return new WaitForSeconds(bitDelay);
-             foreach (Transform child in arrows.transform)
+            foreach (Transform child in arrows.transform)
             {
-                child.GetComponent<Animator>().SetTrigger("biggerArrow");
+                child.GetComponent<Animator>().SetTrigger("trigger");
+            }
+            
+            foreach (Animator animator in animators)
+            {
+                if(animator.isActiveAndEnabled) animator.SetTrigger("trigger");    
             }
         }
     }

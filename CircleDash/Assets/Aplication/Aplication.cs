@@ -7,7 +7,7 @@ public class Aplication : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 120;   
+        Application.targetFrameRate = 60;   
     }
 
 }

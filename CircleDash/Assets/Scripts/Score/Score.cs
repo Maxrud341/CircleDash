@@ -16,6 +16,6 @@ public class Score : MonoBehaviour
     public void EditScore(int hitScore){
         score += hitScore;
         scoreText.text = score.ToString();
-        animator.SetTrigger("Get Score");
+        // animator.SetTrigger("trigger");
     }
 }

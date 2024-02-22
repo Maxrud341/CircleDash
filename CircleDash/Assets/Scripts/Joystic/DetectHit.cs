@@ -8,6 +8,7 @@ public class DetectHit : MonoBehaviour
     public ManageRangeArrow2Trap manageRangeArrow2Trap;
     public Destroyer destroyer;
     public int hitScore;
+    public End end;
 
 
 
@@ -18,13 +19,21 @@ public class DetectHit : MonoBehaviour
         {
             onHit.OnSuccessHit(direction, hitScore);
             Destroy(destroyer.currentArrow);
+            if (hitScore > 8.5f)
+            {
+                end.greenArrow++;
+            }
+            else
+            {
+                end.orangeArrow++;
+            }
         }
         else
         {
-            onHit.OnUnsuccessHit(direction, hitScore);   
+            onHit.OnUnsuccessHit(direction, hitScore);
         }
     }
 
-    
+
 
 }

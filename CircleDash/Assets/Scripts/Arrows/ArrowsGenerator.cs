@@ -5,7 +5,7 @@ public class ArrowsGenerator : MonoBehaviour
 {
     public PlatesReaction platesReaction;
     public Arrow[] arrows;
-
+    public End end;
     public void GenerateMap(Arrow[] arrowsMap)
     {
         arrows = arrowsMap;
@@ -19,12 +19,24 @@ public class ArrowsGenerator : MonoBehaviour
             yield return new WaitForSeconds(arrow.delay);
             CreateArrow(arrow);
         }
+        
+        StartCoroutine(WaitForEnd());
     }
+
+    private IEnumerator WaitForEnd()
+{
+    while (transform.childCount > 0)
+    {
+        yield return null;
+    }
+    yield return new WaitForSeconds(1);
+    end.EndMap();
+}
 
     private void CreateArrow(Arrow arrow)
     {
         Quaternion rotation = Quaternion.Euler(0, 0, -90 * (arrow.direction - 1));
-        
+
         GameObject newArrow = Instantiate(arrow.arrow, transform.position, rotation, transform);
     }
 }
