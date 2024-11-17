@@ -8,7 +8,7 @@ public class End : MonoBehaviour
     public Pause pause;
     public int score;
     public TextMeshProUGUI scoreText;
-    public Score scoreScript;
+    public ScoreOld scoreScript;
     public Joystick3 joystick3;
 
     public int misses;

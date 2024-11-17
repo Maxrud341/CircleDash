@@ -6,7 +6,7 @@ using UnityEngine;
 public class OnHit : MonoBehaviour
 {
 
-    public Score score;
+    public ScoreOld score;
     public PlatesReaction platesReaction;
     public AudioSource SuccessFX;
 
