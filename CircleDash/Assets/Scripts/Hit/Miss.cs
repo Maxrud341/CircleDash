@@ -58,7 +58,7 @@ public class Miss : MonoBehaviour
         pause.PauseGame();
         pause.OpenLoseCanv();
         pause.CloseMenuIco();
-        pause.MusicPause();
+        pause.PauseMusic();
     }
 
     IEnumerator TemporaryImmortality()

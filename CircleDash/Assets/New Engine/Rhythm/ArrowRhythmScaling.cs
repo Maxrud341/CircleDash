@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArrowRhythmScaling : MonoBehaviour
 {
     //public float scaleIncreaseFactor;
-    private float animationTime = RhythmEngine.bitDelay / 5;
+    private float animationTime;
     public bool canScale = true;
     private Animator animator;
     void OnEnable()
@@ -26,6 +26,7 @@ public class ArrowRhythmScaling : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        animationTime = RhythmEngine.bitDelay / 5;
     }
 
     void OnBitTriggered()

@@ -4,23 +4,24 @@ using UnityEngine;
 
 public class HitManager : MonoBehaviour
 {
-    public GameObject currentArrow;
-    public Animator[] plateAnimators;
-    public ParticleSystem[] PlatePS;
-    public ParticleSystem ArrowPS;
+    [SerializeField] private GradesManager gradesManager;
+    [SerializeField] private GameObject currentArrow;
+    [SerializeField] private Animator[] plateAnimators;
+    [SerializeField] private ParticleSystem[] PlatePS;
+    [SerializeField] private ParticleSystem ArrowPS;
 
-    public AudioSource SuccessAS;
-    public AudioClip Success1;
-    public AudioClip Success2;
+    [SerializeField] private AudioSource SuccessAS;
+    [SerializeField] private AudioClip Success1;
+    [SerializeField] private AudioClip Success2;
 
-    public AudioSource UnSuccessAS;
+    [SerializeField] private AudioSource UnSuccessAS;
     private int num = 0;
 
 
-    public Animator circle;
-    public Animator bg;
-    public float missCooldown = 3f;
-    private bool isOnCooldown = false;
+    [SerializeField] private Animator circle;
+    [SerializeField] private Animator bg;
+    [SerializeField] private float missCooldown = 3f;
+    [SerializeField] private bool isOnCooldown = false;
 
     public void OnSuccessHit(int direction, int score, GameObject arrow)
     {
@@ -49,6 +50,16 @@ public class HitManager : MonoBehaviour
         // }
         // num++;
         SuccessAS.Play();
+
+        if (RhythmEngine.boolOnBit)
+        {
+            gradesManager.CreatePerfectGrade();
+        }
+        else
+        {
+            gradesManager.CreateGoodGrade();
+
+        }
     }
 
     public void OnUnsuccessHit(int direction)
@@ -81,7 +92,7 @@ public class HitManager : MonoBehaviour
             Debug.Log("Miss is on cooldown!");
             return;
         }
-
+        gradesManager.CreateMissGrade();
         UnSuccessAS.Play();
         Combo.ResetCombo();
         Lives.RemoveLife();
@@ -113,7 +124,10 @@ public class HitManager : MonoBehaviour
 
     private void OnHitDetected(int direction)
     {
-        CalculateHit(direction, currentArrow);
+        if (currentArrow != null)
+        {
+            CalculateHit(direction, currentArrow);
+        }
     }
 
     private void OnNewCurrentArrow(GameObject arrow)

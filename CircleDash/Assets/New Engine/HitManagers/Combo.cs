@@ -4,7 +4,9 @@ using System;
 
 public class Combo : MonoBehaviour
 {
-    public static int combo = 1;
+    public AudioSource audioSource;
+    public static AudioSource audioSourceStatic;
+    private static int combo = 1;
     public static float comboMultiplier = 1f;
     public static int maxCombo = 10;
     public static TextMeshProUGUI comboText;
@@ -19,6 +21,7 @@ public class Combo : MonoBehaviour
     {
         comboText = GetComponent<TextMeshProUGUI>();
         particleSystemsStatic = particleSystems;
+        audioSourceStatic = audioSource;
     }
     public static void AddCombo()
     {
@@ -29,10 +32,11 @@ public class Combo : MonoBehaviour
             comboText.text = combo.ToString() + "X";
             // animator?.SetTrigger("trigger");
         }
-        else
+        else if (combo == maxCombo)
         {
             foreach (ParticleSystem particle in particleSystemsStatic)
             {
+                audioSourceStatic.Play();
                 particle.Play();
             }
             comboText.text = maxCombo.ToString() + "X";

@@ -14,25 +14,12 @@ public class ColorTransition : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
 
-    private int bitCounter = 0;
 
 
     public TransitionState currentState = TransitionState.Default;
 
-    void OnEnable()
-    {
-        RhythmEngine.OnBitEvent += OnBitTriggered;
-    }
 
-    void OnDisable()
-    {
-        RhythmEngine.OnBitEvent -= OnBitTriggered;
-    }
 
-    void OnBitTriggered()
-    {
-        bitCounter++;
-    }
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -64,11 +51,16 @@ public class ColorTransition : MonoBehaviour
                 currentColor = Color.white;
                 spriteRenderer.color = currentColor;
                 break;
+
+            case TransitionState.Invisible:
+                currentColor = new Color(1, 1, 1, 0); 
+                spriteRenderer.color = currentColor;
+                break;
+
             default:
                 Debug.Log("ERROR COLOR STATE");
                 return;
         }
-
     }
 
 }
@@ -77,5 +69,6 @@ public enum TransitionState
 {
     Default,
     Red,
-    Transit
+    Transit,
+    Invisible
 }

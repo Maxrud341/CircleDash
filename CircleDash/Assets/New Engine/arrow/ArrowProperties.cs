@@ -10,17 +10,23 @@ public class ArrowProperties : MonoBehaviour
     public bool canBeHitted = false;
     public static event Action OnArrowDestroy;
     public static event Action OnArrowSkip;
-    
+    private GameObject arrowTexture;
+
+
     public ColorTransition rhythmColorTransition;
 
     void OnEnable()
     {
         RhythmEngine.OnBitEvent += OnBitTriggered;
+        RhythmEngine.OnBetweenBit += OnBetweenBit;
+
     }
 
     void OnDisable()
     {
         RhythmEngine.OnBitEvent -= OnBitTriggered;
+        RhythmEngine.OnBetweenBit -= OnBetweenBit;
+
     }
 
     void OnBitTriggered()
@@ -28,39 +34,46 @@ public class ArrowProperties : MonoBehaviour
         bitCounter++;
         canBeCurrent = true;
     }
-    void Start()
+
+    void OnBetweenBit()
     {
-        rhythmColorTransition = transform.GetChild(0).GetChild(1).GetChild(1).GetComponent<ColorTransition>();
-    }
-    void Update()
-    {
-        if (canBeHitted == false && bitCounter == 5 && RhythmEngine.accuracy <= 0.05)
+        if (canBeHitted == false && bitCounter == 5)
         {
             canBeHitted = true;
         }
+
+        if (bitCounter == 6 && RhythmEngine.accuracy <= 0.2)
+        {
+            OnArrowSkip?.Invoke();
+            DestroySelf();
+        }
+    }
+    void Start()
+    {
+        arrowTexture =  transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
+        rhythmColorTransition = arrowTexture.GetComponent<ColorTransition>();
+    }
+    void Update()
+    {
+
 
         if (isCurrent)
         {
 
             if (canBeHitted)
             {
+                arrowTexture.SetActive(true);
                 rhythmColorTransition.currentState = TransitionState.Transit;
             }
             else
             {
+                arrowTexture.SetActive(true);
                 rhythmColorTransition.currentState = TransitionState.Red;
             }
 
         }
 
 
-
-
-        if (bitCounter == 6 && RhythmEngine.accuracy <= 0.05)
-        {
-            OnArrowSkip?.Invoke();
-            DestroySelf();
-        }
     }
 
     public void DestroySelf()

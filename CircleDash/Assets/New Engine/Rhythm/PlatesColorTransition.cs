@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class PlatesColorTransition : MonoBehaviour
 {
+    public Sprite defaultSprite;
+    public Sprite glowSprite;
+
     public GameObject topPlate;
     public GameObject rightPlate;
     public GameObject botPlate;
     public GameObject leftPlate;
-
-
 
 
     private ColorTransition topPlateCT;
@@ -18,6 +19,10 @@ public class PlatesColorTransition : MonoBehaviour
     private ColorTransition botPlateCT;
     private ColorTransition leftPlateCT;
 
+    private SpriteRenderer topPlateSR;
+    private SpriteRenderer rightPlateSR;
+    private SpriteRenderer botPlateSR;
+    private SpriteRenderer leftPlateSR;
 
 
     private ArrowProperties currentArrow;
@@ -41,6 +46,12 @@ public class PlatesColorTransition : MonoBehaviour
         rightPlateCT = rightPlate.GetComponent<ColorTransition>();
         botPlateCT = botPlate.GetComponent<ColorTransition>();
         leftPlateCT = leftPlate.GetComponent<ColorTransition>();
+
+        topPlateSR = topPlate.GetComponent<SpriteRenderer>();
+        rightPlateSR = rightPlate.GetComponent<SpriteRenderer>();
+        botPlateSR = botPlate.GetComponent<SpriteRenderer>();
+        leftPlateSR = leftPlate.GetComponent<SpriteRenderer>();
+
     }
     void OnNewCurrentArrow(GameObject arrow)
     {
@@ -70,15 +81,19 @@ public class PlatesColorTransition : MonoBehaviour
             switch (direction)
             {
                 case 1:
+                    topPlateSR.sprite = glowSprite;
                     topPlateCT.currentState = TransitionState.Transit;
                     break;
                 case 2:
+                    rightPlateSR.sprite = glowSprite;
                     rightPlateCT.currentState = TransitionState.Transit;
                     break;
                 case 3:
+                    botPlateSR.sprite = glowSprite;
                     botPlateCT.currentState = TransitionState.Transit;
                     break;
                 case 4:
+                    leftPlateSR.sprite = glowSprite;
                     leftPlateCT.currentState = TransitionState.Transit;
                     break;
                 default:
@@ -91,15 +106,20 @@ public class PlatesColorTransition : MonoBehaviour
             switch (direction)
             {
                 case 1:
+                    topPlateSR.sprite = glowSprite;
                     topPlateCT.currentState = TransitionState.Red;
+
                     break;
                 case 2:
+                    rightPlateSR.sprite = glowSprite;
                     rightPlateCT.currentState = TransitionState.Red;
                     break;
                 case 3:
+                    botPlateSR.sprite = glowSprite;
                     botPlateCT.currentState = TransitionState.Red;
                     break;
                 case 4:
+                    leftPlateSR.sprite = glowSprite;
                     leftPlateCT.currentState = TransitionState.Red;
                     break;
                 default:
@@ -111,10 +131,15 @@ public class PlatesColorTransition : MonoBehaviour
 
     public void resetPlates()
     {
+        topPlateSR.sprite = defaultSprite;
+        rightPlateSR.sprite = defaultSprite;
+        botPlateSR.sprite = defaultSprite;
+        leftPlateSR.sprite = defaultSprite;
+
         topPlateCT.currentState = TransitionState.Default;
         rightPlateCT.currentState = TransitionState.Default;
         botPlateCT.currentState = TransitionState.Default;
         leftPlateCT.currentState = TransitionState.Default;
-
     }
+
 }

@@ -1,100 +1,117 @@
 using UnityEngine;
+using System.Collections;
 using System;
 
 
 public class RhythmEngine : MonoBehaviour
 {
-    [Range (0, 2)]
-    public float timeScale;
-    public int bpm = 120; // Биты в минуту
-    public static float bitDelay; // Задержка между битами (с)
-    public float timeToNextBit; // Время до следующего бита (с)
-    public float onBitAccuracy = 0.1f; // Допустимая погрешность до бита в секундах
-
-    public AudioSource audioSource; // Аудиоисточник для воспроизведения песни
-    public AudioClip songClip; // Ссылка на песню
-    public float songLength; // Длина песни в секундах
-
-    private float bitTimer; // Внутренний таймер для отслеживания битов
-    private float elapsedTime; // Общее время с начала игры
-
-    // Статические переменные для доступа из других классов
-    public static float accuracy; // Переменная акуратности (от -1 до +1)
     public float accuracy2;
-    public static bool boolOnBit; // Попадание в тайминг бита
+    [SerializeField] private float steps;
+    [SerializeField] private float bpm;
+    [SerializeField] private float levelDuration;
+    [SerializeField] private float onBitAccuracy;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip songClip;
 
-    // Ивенты для реакции на события
-    public static event Action OnBitEvent; // Событие для каждого бита
-    public static event Action OnSongEndEvent; // Событие окончания песни
 
-    void Start()
+
+    public static float accuracy;
+    public static bool boolOnBit;
+    public static float bitDelay;
+
+    public static event Action OnBitEvent;
+    public static event Action OnBetweenBit;
+    public static event Action OnSongEndEvent;
+
+    private float levelStartTime;
+    private bool songEnded = false;
+
+    int num = 1;
+
+
+
+    void Awake()
     {
-        bitDelay = 60f / bpm; // Рассчитываем задержку между битами на основе bpm
-        bitTimer = 0; // Инициализация таймера
+        //bpm = UniBpmAnalyzer.AnalyzeBpm(songClip);
 
-        if (songClip != null)
-        {
-            audioSource.clip = songClip; // Присваиваем аудиоклип аудиоисточнику
-            songLength = songClip.length; // Получаем длину песни
-            audioSource.Play(); // Запускаем воспроизведение песни
-        }
-        else
-        {
-            Debug.LogWarning("No song assigned to the AudioSource!");
-        }
+        bitDelay = 60f / bpm;
+        //audioSource.time = 40;
+        audioSource.clip = songClip;
 
-        // TriggerBit();
+        levelStartTime = Time.time;
+        //StartCoroutine(PlayAudioWithDelay(1f));
+        audioSource.Play();
     }
 
-    void Update()
+    IEnumerator PlayAudioWithDelay(float delay)
     {
-        //Time.timeScale = timeScale;
-        float deltaTime = Time.deltaTime;
-        bitTimer += deltaTime; // Увеличиваем таймер для битов
-        elapsedTime += deltaTime; // Считаем общее время
 
-        timeToNextBit = bitDelay - bitTimer; // Рассчитываем время до следующего бита
-        // Нормализуем бит таймер в диапазоне от -1 до +1
+        yield return new WaitForSeconds(delay);
+        audioSource.Play();
 
-        accuracy = Mathf.Abs((bitTimer / bitDelay) * 2f - 1f);
+    }
 
+    private int lastInterval;
+    private int lastMidInterval;
+
+    private void FixedUpdate()
+    {
+        float sampledTime = audioSource.timeSamples / (audioSource.clip.frequency * GetIntervalLength(bpm));
+
+        CheckForNewInterval(sampledTime - 0.15f);
+        CheckForNewMidInterval(sampledTime * 2f - 0.15f);
+
+        accuracy = GetAccuracy(sampledTime);
         accuracy2 = accuracy;
+        boolOnBit = (accuracy >= 1 - onBitAccuracy);
 
-        // Проверяем, попал ли игрок в тайминг бита
-        if (Mathf.Abs(accuracy) >= 1 - onBitAccuracy)
+        if ((!audioSource.isPlaying || Time.time - levelStartTime >= levelDuration) && !songEnded)
         {
-            boolOnBit = true;
-        }
-        else
-        {
-            boolOnBit = false;
-        }
-
-        // Если время для следующего бита наступило
-        if (bitTimer >= bitDelay)
-        {
-            TriggerBit();
-            bitTimer -= bitDelay; // Сбрасываем таймер с учётом возможного проскока
-        }
-
-        // Проверяем, если песня завершилась
-        if (audioSource != null && !audioSource.isPlaying && elapsedTime >= songLength)
-        {
-            TriggerSongEnd();
+            songEnded = true;
+            OnSongEndEvent?.Invoke();
         }
     }
 
-    // Метод, который срабатывает при наступлении бита
-    void TriggerBit()
-    {   
-        // Debug.Log("Bit Triggered! Time: " + elapsedTime);
-        OnBitEvent?.Invoke(); // Вызов события для реакции на бит
-    }
-
-    // Метод, который срабатывает при завершении песни
-    void TriggerSongEnd()
+    private float GetAccuracy(float sampledTime)
     {
-        Debug.Log("Song Ended!");
-        OnSongEndEvent?.Invoke(); // Вызов события окончания песни
+        float currentBit = Mathf.Floor(sampledTime);
+        float nextBit = currentBit + 1f;
+
+        float distanceToCurrentBit = Mathf.Abs(sampledTime - currentBit);
+        float distanceToNextBit = Mathf.Abs(sampledTime - nextBit);
+
+        float minDistance = Mathf.Min(distanceToCurrentBit, distanceToNextBit);
+
+        return 1f - Mathf.Clamp01(minDistance / 0.5f);
+    }
+
+    public float GetIntervalLength(float bpm)
+    {
+        return 60f / (bpm * steps);
+    }
+
+    public void CheckForNewInterval(float interval)
+    {
+        if (Mathf.FloorToInt(interval) != lastInterval)
+        {
+            lastInterval = Mathf.FloorToInt(interval);
+            OnBitEvent?.Invoke();
+        }
+    }
+
+    public void CheckForNewMidInterval(float interval)
+    {
+        int midInterval = Mathf.FloorToInt(interval);
+
+        if (midInterval != lastMidInterval)
+        {
+            lastMidInterval = midInterval;
+
+            if (midInterval % 2 == 1) 
+            {
+                OnBetweenBit?.Invoke();
+            }
+        }
     }
 }
+
