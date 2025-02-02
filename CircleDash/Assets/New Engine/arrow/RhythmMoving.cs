@@ -78,7 +78,10 @@ public class RhythmMoving : MonoBehaviour
 
         while (elapsedTime < timeToMove)
         {
-            transform.position = Vector3.Lerp(startingPosition, targetPosition, elapsedTime / timeToMove);
+            float t = elapsedTime / timeToMove;
+            t = Mathf.SmoothStep(0, 1, t); // Плавное ускорение и замедление
+
+            transform.position = Vector3.Lerp(startingPosition, targetPosition, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
