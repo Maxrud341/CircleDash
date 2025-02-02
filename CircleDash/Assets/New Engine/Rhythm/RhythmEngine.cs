@@ -36,11 +36,13 @@ public class RhythmEngine : MonoBehaviour
 
         bitDelay = 60f / bpm;
         //audioSource.time = 40;
+        songClip.LoadAudioData();
         audioSource.clip = songClip;
+        
 
         levelStartTime = Time.time;
-        //StartCoroutine(PlayAudioWithDelay(1f));
-        audioSource.Play();
+        StartCoroutine(PlayAudioWithDelay(0.8f));
+        //audioSource.Play();
     }
 
     IEnumerator PlayAudioWithDelay(float delay)
@@ -58,15 +60,16 @@ public class RhythmEngine : MonoBehaviour
     {
         float sampledTime = audioSource.timeSamples / (audioSource.clip.frequency * GetIntervalLength(bpm));
 
-        CheckForNewInterval(sampledTime - 0.15f);
-        CheckForNewMidInterval(sampledTime * 2f - 0.15f);
+        CheckForNewInterval(sampledTime - 0.016f);
+        CheckForNewMidInterval(sampledTime * 2f - 0.05f);
 
         accuracy = GetAccuracy(sampledTime);
         accuracy2 = accuracy;
-        boolOnBit = (accuracy >= 1 - onBitAccuracy);
+        boolOnBit = accuracy >= 1 - onBitAccuracy;
 
-        if ((!audioSource.isPlaying || Time.time - levelStartTime >= levelDuration) && !songEnded)
+        if ((Time.time - levelStartTime >= levelDuration) && !songEnded)
         {
+
             songEnded = true;
             OnSongEndEvent?.Invoke();
         }
@@ -107,7 +110,7 @@ public class RhythmEngine : MonoBehaviour
         {
             lastMidInterval = midInterval;
 
-            if (midInterval % 2 == 1) 
+            if (midInterval % 2 == 1)
             {
                 OnBetweenBit?.Invoke();
             }

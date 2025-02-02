@@ -13,6 +13,7 @@ public class Lives : MonoBehaviour
         livesAnimators = GetComponentsInChildren<Animator>();
         Array.Reverse(livesAnimators);
         UpdateLives();
+        lives = 4;
     }
 
     public static void RemoveLife()

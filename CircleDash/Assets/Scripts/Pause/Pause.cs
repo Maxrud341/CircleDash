@@ -44,8 +44,16 @@ public class Pause : MonoBehaviour
     }
     public void backToMaps()
     {
+        FadeIn();
+        StartCoroutine(LoadSceneAfterFade());
+    }
+
+    private IEnumerator LoadSceneAfterFade()
+    {
+        yield return new WaitForSeconds(0.4f);
         SceneManager.LoadScene(0);
     }
+
 
     public void RestartGame()
     {
@@ -107,5 +115,18 @@ public class Pause : MonoBehaviour
     void OnApplicationPause(bool pauseStatus)
     {
         PauseGame();
+    }
+
+
+    public Animator fadeBlack;
+    void Start()
+    {
+        fadeBlack.updateMode = AnimatorUpdateMode.UnscaledTime;
+        fadeBlack.SetTrigger("StartOut");
+    }
+
+    public void FadeIn()
+    {
+        fadeBlack.SetTrigger("IN");
     }
 }

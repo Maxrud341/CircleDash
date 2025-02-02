@@ -5,7 +5,7 @@ using UnityEngine;
 public class RhythmMoving : MonoBehaviour
 {
     public float moveDistance;
-    public float animationmX = 4;
+    public float animationmX = 6;
     // private float animationTime = RhythmEngine.bitDelay / animationmX;
 
     // private Animator animator;

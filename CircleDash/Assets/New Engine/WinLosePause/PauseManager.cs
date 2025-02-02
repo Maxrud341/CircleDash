@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 
 public class PauseManager : MonoBehaviour
 {
     public GameObject menuCanvas;
     public GameObject LoseCanv;
+    public GameObject WinCanv;
     public GameObject SettingsCanv;
     public GameObject EndCanv;
     public GameObject MenuIco;
@@ -42,12 +44,21 @@ public class PauseManager : MonoBehaviour
     }
     public void backToMaps()
     {
+        FadeIn();
+        StartCoroutine(LoadSceneAfterFade());
+    }
+
+    private IEnumerator LoadSceneAfterFade()
+    {
+        yield return new WaitForSecondsRealtime(0.6f);
+        UnPauseGame();
         SceneManager.LoadScene(0);
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(sceneNum);
+        UnPauseGame();
     }
 
     public void Test()
@@ -59,6 +70,12 @@ public class PauseManager : MonoBehaviour
     {
         LoseCanv.SetActive(true);
     }
+
+    public void OpenWinCanv()
+    {
+        WinCanv.SetActive(true);
+    }
+
     public void OpenSettingsCanv()
     {
         SettingsCanv.SetActive(true);
@@ -83,4 +100,17 @@ public class PauseManager : MonoBehaviour
     {
         EndCanv.SetActive(true);
     }
+
+    public Animator fadeBlack;
+    void Start()
+    {
+        fadeBlack.updateMode = AnimatorUpdateMode.UnscaledTime;
+        fadeBlack.SetTrigger("StartOut");
+    }
+
+    public void FadeIn()
+    {
+        fadeBlack.SetTrigger("IN");
+    }
+
 }

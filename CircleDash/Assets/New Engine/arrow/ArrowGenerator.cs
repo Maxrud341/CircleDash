@@ -27,7 +27,7 @@ public class ArrowGenerator : MonoBehaviour
     void OnSongEnd()
     {
         // Debug.Log("Song has ended!");
-        // songEnded = true;
+        songEnded = true;
     }
 
     void OnBitTriggered()

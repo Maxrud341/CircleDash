@@ -21,20 +21,21 @@ public class RhytmScaling : MonoBehaviour
 
     }
 
+
     void OnBitTriggered()
     {
         if (canScale && animators != null)
         {
-
             for (int i = 0; i < animators.Length; i++)
             {
-                StartCoroutine(Scale(RhythmEngine.bitDelay / 5f, animators[i]));
+                if (animators[i].gameObject.activeInHierarchy)
+                {
+                    StartCoroutine(Scale(RhythmEngine.bitDelay / 5f, animators[i]));
+                }
             }
         }
-
-
-
     }
+
     private IEnumerator Scale(float timeToScale, Animator animator)
     {
         float delay = RhythmEngine.bitDelay - timeToScale;
@@ -43,9 +44,10 @@ public class RhytmScaling : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
 
-        animator.speed = 1 / timeToScale;
-
-        animator.SetTrigger("Scale");
-
+        if (animator.gameObject.activeInHierarchy)
+        {
+            animator.speed = 1 / timeToScale;
+            animator.SetTrigger("Scale");
+        }
     }
 }
