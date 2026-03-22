@@ -9,7 +9,7 @@ public class RhythmJoystick : MonoBehaviour
     public static event Action<int> OnHitDetected;
 
     public bool detectSwipeOnlyAfterRelease = false;
-    public float minSwipeDistance = 3f;
+    public float minSwipeDistance = 5f;
 
     void Update()
     {

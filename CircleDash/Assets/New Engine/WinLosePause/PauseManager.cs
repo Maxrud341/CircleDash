@@ -13,6 +13,7 @@ public class PauseManager : MonoBehaviour
     public GameObject MenuIco;
     public AudioSource music;
     public RhythmJoystick joystick;
+    public GameObject unPauseTimer;
     public int sceneNum;
     public void OpenMenu()
     {
@@ -41,6 +42,11 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         joystick.enabled = true;
+    }
+
+    public void StartUnPauseTimer()
+    {
+        unPauseTimer.SetActive(true);
     }
     public void backToMaps()
     {

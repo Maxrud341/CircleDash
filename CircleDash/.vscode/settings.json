@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CircleDash.sln"
+    "dotnet.defaultSolution": "CircleDash.slnx"
 }

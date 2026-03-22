@@ -15,7 +15,7 @@ public class RhythmManager : MonoBehaviour
         StartCoroutine(ManageFullSpeed());
     }
 
-    IEnumerator ManageFullSpeed()
+    public IEnumerator ManageFullSpeed()
     {
         foreach (var section in X2_Sections)
         {

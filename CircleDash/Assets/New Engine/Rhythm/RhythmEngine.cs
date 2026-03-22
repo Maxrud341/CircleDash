@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections;
 using System;
-
 
 public class RhythmEngine : MonoBehaviour
 {
@@ -10,10 +8,9 @@ public class RhythmEngine : MonoBehaviour
     [SerializeField] private float bpm;
     [SerializeField] private float levelDuration;
     [SerializeField] private float onBitAccuracy;
+    [SerializeField] private float latency = 0f; // в секундах, + если игрок жмёт поздно, - если рано
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip songClip;
-
-
 
     public static float accuracy;
     public static bool boolOnBit;
@@ -23,53 +20,38 @@ public class RhythmEngine : MonoBehaviour
     public static event Action OnBetweenBit;
     public static event Action OnSongEndEvent;
 
-    private float levelStartTime;
     private bool songEnded = false;
-
-    int num = 1;
-
-
-
-    void Awake()
-    {
-        //bpm = UniBpmAnalyzer.AnalyzeBpm(songClip);
-
-        bitDelay = 60f / bpm;
-        //audioSource.time = 40;
-        songClip.LoadAudioData();
-        audioSource.clip = songClip;
-        
-
-        levelStartTime = Time.time;
-        StartCoroutine(PlayAudioWithDelay(0.8f));
-        //audioSource.Play();
-    }
-
-    IEnumerator PlayAudioWithDelay(float delay)
-    {
-
-        yield return new WaitForSeconds(delay);
-        audioSource.Play();
-
-    }
 
     private int lastInterval;
     private int lastMidInterval;
 
-    private void FixedUpdate()
-    {
-        float sampledTime = audioSource.timeSamples / (audioSource.clip.frequency * GetIntervalLength(bpm));
+    private float SongTime => (float)audioSource.timeSamples / audioSource.clip.frequency - latency;
+    private bool IsPlaying => audioSource.isPlaying;
 
-        CheckForNewInterval(sampledTime - 0.016f);
-        CheckForNewMidInterval(sampledTime * 2f - 0.05f);
+    void Awake()
+    {
+        bitDelay = 60f / bpm;
+        songClip.LoadAudioData();
+        audioSource.clip = songClip;
+        audioSource.Play();
+    }
+
+    private void Update()
+    {
+        if (!IsPlaying) return;
+
+        float intervalLength = GetIntervalLength(bpm);
+        float sampledTime = SongTime / intervalLength;
+
+        CheckForNewInterval(sampledTime);
+        CheckForNewMidInterval(sampledTime * 2f);
 
         accuracy = GetAccuracy(sampledTime);
         accuracy2 = accuracy;
-        boolOnBit = accuracy >= 1 - onBitAccuracy;
+        boolOnBit = accuracy >= 1f - onBitAccuracy;
 
-        if ((Time.time - levelStartTime >= levelDuration) && !songEnded)
+        if (!songEnded && SongTime >= levelDuration)
         {
-
             songEnded = true;
             OnSongEndEvent?.Invoke();
         }
@@ -95,9 +77,10 @@ public class RhythmEngine : MonoBehaviour
 
     public void CheckForNewInterval(float interval)
     {
-        if (Mathf.FloorToInt(interval) != lastInterval)
+        int current = Mathf.FloorToInt(interval);
+        if (current != lastInterval)
         {
-            lastInterval = Mathf.FloorToInt(interval);
+            lastInterval = current;
             OnBitEvent?.Invoke();
         }
     }
@@ -105,11 +88,9 @@ public class RhythmEngine : MonoBehaviour
     public void CheckForNewMidInterval(float interval)
     {
         int midInterval = Mathf.FloorToInt(interval);
-
         if (midInterval != lastMidInterval)
         {
             lastMidInterval = midInterval;
-
             if (midInterval % 2 == 1)
             {
                 OnBetweenBit?.Invoke();
@@ -117,4 +98,3 @@ public class RhythmEngine : MonoBehaviour
         }
     }
 }
-
