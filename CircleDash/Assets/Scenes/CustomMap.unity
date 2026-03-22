@@ -11397,6 +11397,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee910efbdbe7e98419d332382b9843db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCustomMap: 1
+  rhythmEngine: {fileID: 488371587}
+  rhythmManager: {fileID: 351902874}
   menuCanvas: {fileID: 1645970247}
   LoseCanv: {fileID: 833151507}
   WinCanv: {fileID: 811480083}
@@ -11406,7 +11409,7 @@ MonoBehaviour:
   music: {fileID: 1957868129}
   joystick: {fileID: 180937475}
   unPauseTimer: {fileID: 438539845}
-  sceneNum: 1
+  sceneNum: 2
   fadeBlack: {fileID: 62160612}
 --- !u!1 &288686696
 GameObject:
@@ -35063,7 +35066,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.38679248, g: 0.10764508, b: 0.12625489, a: 0.78431374}
+  m_Color: {r: 0.5647059, g: 0.21234334, b: 0.17254901, a: 0.78431374}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -42106,6 +42109,37 @@ PrefabInstance:
       addedObject: {fileID: 180218259}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74cd4c7a297aa674d8568954593167d3, type: 3}
+--- !u!1 &1604065595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604065596}
+  m_Layer: 0
+  m_Name: LoadCustomMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604065596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604065595}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1784389118}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608039064
 GameObject:
   m_ObjectHideFlags: 0
@@ -48234,6 +48268,7 @@ Transform:
   - {fileID: 1750333912}
   - {fileID: 1088562216}
   - {fileID: 492853515}
+  - {fileID: 1604065596}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1791755571
@@ -54474,11 +54509,11 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -15
   m_Sprite: {fileID: 7197020175605579691, guid: 5e1c8a0b58f2e4b4a9902df7125edb9f, type: 3}
-  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
+  m_Color: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

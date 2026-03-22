@@ -10,7 +10,7 @@ public class RhythmManager : MonoBehaviour
 
     public List<Vector2> X2_Sections; // Секции с включением FullSpeed
 
-    void Start()
+    public void StartRhythmManager()
     {
         StartCoroutine(ManageFullSpeed());
     }

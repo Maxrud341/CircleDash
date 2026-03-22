@@ -5,12 +5,13 @@ public class RhythmEngine : MonoBehaviour
 {
     public float accuracy2;
     [SerializeField] private float steps;
-    [SerializeField] private float bpm;
+    [SerializeField] public float bpm;
     [SerializeField] private float levelDuration;
     [SerializeField] private float onBitAccuracy;
     [SerializeField] private float latency = 0f; // в секундах, + если игрок жмёт поздно, - если рано
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip songClip;
+    [SerializeField] public AudioClip songClip;
+
 
     public static float accuracy;
     public static bool boolOnBit;
@@ -28,7 +29,7 @@ public class RhythmEngine : MonoBehaviour
     private float SongTime => (float)audioSource.timeSamples / audioSource.clip.frequency - latency;
     private bool IsPlaying => audioSource.isPlaying;
 
-    void Awake()
+    public void StartGame()
     {
         bitDelay = 60f / bpm;
         songClip.LoadAudioData();

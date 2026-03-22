@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 
 public class PauseManager : MonoBehaviour
 {
+    public bool isCustomMap;
+    public RhythmEngine rhythmEngine;
+    public RhythmManager rhythmManager;
     public GameObject menuCanvas;
     public GameObject LoseCanv;
     public GameObject WinCanv;
@@ -15,6 +19,9 @@ public class PauseManager : MonoBehaviour
     public RhythmJoystick joystick;
     public GameObject unPauseTimer;
     public int sceneNum;
+    public static bool needToAnalyseMap = true;
+    private static List<Vector2> sections;
+    private static int bpm;
     public void OpenMenu()
     {
         menuCanvas.SetActive(true);
@@ -63,6 +70,7 @@ public class PauseManager : MonoBehaviour
 
     public void RestartGame()
     {
+        needToAnalyseMap = false;
         SceneManager.LoadScene(sceneNum);
         UnPauseGame();
     }
@@ -110,6 +118,28 @@ public class PauseManager : MonoBehaviour
     public Animator fadeBlack;
     void Start()
     {
+        if (isCustomMap)
+        {
+            if (needToAnalyseMap)
+            {
+                (sections, bpm) = MusicAnalyser.AnalyseClip(CustomMapManager.LoadedClip);
+
+            }
+
+            rhythmEngine.bpm = bpm;
+            rhythmEngine.songClip = CustomMapManager.LoadedClip;
+            rhythmManager.X2_Sections = sections;
+            needToAnalyseMap = false;
+            Debug.Log($"Map analysed: BPM={bpm}, Sections count={sections.Count}");
+
+            rhythmEngine.StartGame();
+            rhythmManager.StartRhythmManager();
+        }
+        else
+        {
+            rhythmEngine.StartGame();
+            rhythmManager.StartRhythmManager();
+        }
         fadeBlack.updateMode = AnimatorUpdateMode.UnscaledTime;
         fadeBlack.SetTrigger("StartOut");
     }

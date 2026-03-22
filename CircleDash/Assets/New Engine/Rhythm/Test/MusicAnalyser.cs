@@ -58,6 +58,9 @@ public class MusicAnalyser : MonoBehaviour
                             20f, 0.6f, 300, 1.6f,
                             15, 50, 5f, 2f);
         int bpm = UniBpmAnalyzer.AnalyzeBpm(clip);
+        Debug.Log($"Analyzed BPM: {bpm}");
+        if (bpm < 100) bpm = bpm * 2;
+        if (bpm > 200) bpm = bpm / 2;
         return (sections, bpm);
     }
 
