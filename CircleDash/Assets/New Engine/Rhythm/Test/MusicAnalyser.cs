@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MusicAnalyser : MonoBehaviour
 {
-[Header("Audio")]
+    [Header("Audio")]
     public AudioClip audioClip;
 
     [Header("FFT")]
@@ -11,24 +11,24 @@ public class MusicAnalyser : MonoBehaviour
     public int hopSize = 512;
 
     [Header("Сглаживание")]
-    public int sm      = 120;
+    public int sm = 120;
     public int finalSm = 64;
 
     [Header("Сигмоида")]
     public float kSig = 20f;
-    public float x0   = 0.6f;
+    public float x0 = 0.6f;
 
     [Header("Производная")]
-    public int   derivSm  = 300;
-    public float threshK  = 1.6f;
+    public int derivSm = 300;
+    public float threshK = 1.6f;
 
     [Header("Кластеризация границ")]
     public int minGroupSize = 15;
-    public int clusterGap   = 50;
+    public int clusterGap = 50;
 
     [Header("Фильтрация участков")]
     public float minDuration = 5f;
-    public float expandSec   = 2f;
+    public float expandSec = 2f;
 
     public RhythmManager manager;
     public int bpm;
@@ -54,19 +54,27 @@ public class MusicAnalyser : MonoBehaviour
 
     public static (List<Vector2> sections, int bpm) AnalyseClip(AudioClip clip)
     {
-        var sections = Analyse(clip, 2048, 512, 120, 64,
+        // Читаем данные на главном потоке
+        float[] rawSamples = new float[clip.samples * clip.channels];
+        clip.GetData(rawSamples, 0);
+        int channels = clip.channels;
+        int frequency = clip.frequency;
+        int sampleCount = clip.samples;
+        int bpm = UniBpmAnalyzer.AnalyzeBpm(clip); // тоже на главном потоке
+
+        // Передаём уже готовые данные — можно звать из Thread
+        var sections = Analyse(rawSamples, channels, sampleCount, frequency, 2048, 512, 120, 64,
                             20f, 0.6f, 300, 1.6f,
                             15, 50, 5f, 2f);
-        int bpm = UniBpmAnalyzer.AnalyzeBpm(clip);
+
         Debug.Log($"Analyzed BPM: {bpm}");
-        if (bpm < 100) bpm = bpm * 2;
-        if (bpm > 200) bpm = bpm / 2;
+        if (bpm < 100) bpm *= 2;
+        if (bpm > 200) bpm /= 2;
         return (sections, bpm);
     }
 
-
     public static List<Vector2> Analyse(
-        AudioClip clip,
+        float[] rawSamples, int channels, int sampleCount, int sampleRate,
         int fftSize, int hopSize,
         int sm, int finalSm,
         float kSig, float x0,
@@ -74,14 +82,15 @@ public class MusicAnalyser : MonoBehaviour
         int minGroupSize, int clusterGap,
         float minDuration, float expandSec)
     {
-        float[] mono   = ToMono(clip);
-        int sampleRate = clip.frequency;
-        int nFrames    = (mono.Length - fftSize) / hopSize;
+        float[] mono = ToMono(rawSamples, channels, sampleCount);
+        int nFrames = (mono.Length - fftSize) / hopSize;
         float secPerFrame = (float)hopSize / sampleRate;
-        float[] hann   = MakeHann(fftSize);
+        float[] hann = MakeHann(fftSize);
 
-        float[] time_fft     = new float[nFrames];
-        float[] rms_vals     = new float[nFrames];
+        Debug.Log($"sampleCount={sampleCount}, channels={channels}, sampleRate={sampleRate}, fftSize={fftSize}, hopSize={hopSize}");
+        Debug.Log($"mono.Length={mono.Length}, nFrames={(mono.Length - fftSize) / hopSize}");
+        float[] time_fft = new float[nFrames];
+        float[] rms_vals = new float[nFrames];
         float[] spectral_sum = new float[nFrames];
 
         // ── 1. FFT ───────────────────────────────────────────────
@@ -98,13 +107,13 @@ public class MusicAnalyser : MonoBehaviour
 
             float[] mag = FFTMagnitude(frame);
 
-            time_fft[i]     = (float)offset / sampleRate;
-            rms_vals[i]     = Mathf.Sqrt((float)(rmsSum / fftSize));
+            time_fft[i] = (float)offset / sampleRate;
+            rms_vals[i] = Mathf.Sqrt((float)(rmsSum / fftSize));
             spectral_sum[i] = Sum(mag);
         }
 
         // ── 2. Сглаживание ───────────────────────────────────────
-        float[] r1 = MovMean(rms_vals,     sm);
+        float[] r1 = MovMean(rms_vals, sm);
         float[] r2 = MovMean(spectral_sum, sm);
 
         // ── 3. Комбинированный сигнал ────────────────────────────
@@ -133,16 +142,16 @@ public class MusicAnalyser : MonoBehaviour
         float std = StdDev(derivSmooth);
         float thresh = threshK * std;
 
-        var risingIdx  = new List<int>();
+        var risingIdx = new List<int>();
         var fallingIdx = new List<int>();
         for (int i = 0; i < nFrames; i++)
         {
-            if (derivSmooth[i] >  thresh) risingIdx.Add(i);
+            if (derivSmooth[i] > thresh) risingIdx.Add(i);
             if (derivSmooth[i] < -thresh) fallingIdx.Add(i);
         }
 
         // ── 5. Кластеризация границ ──────────────────────────────
-        int[] riseEdges = ClusterEdges(risingIdx,  true,  minGroupSize, clusterGap);
+        int[] riseEdges = ClusterEdges(risingIdx, true, minGroupSize, clusterGap);
         int[] fallEdges = ClusterEdges(fallingIdx, false, minGroupSize, clusterGap);
 
         // ── 6. Фильтр: два подъёма подряд → второй ───────────────
@@ -208,7 +217,7 @@ public class MusicAnalyser : MonoBehaviour
             if (tFall - tRise < minDuration) continue;
 
             int idxStart = Mathf.Max(0, re - 1);
-            int idxEnd   = Mathf.Min(nFrames - 1, feMatch + expandFrames);
+            int idxEnd = Mathf.Min(nFrames - 1, feMatch + expandFrames);
 
             sections.Add(new Vector2(time_fft[idxStart], time_fft[idxEnd]));
         }
@@ -220,7 +229,7 @@ public class MusicAnalyser : MonoBehaviour
 
     static int[] ClusterEdges(List<int> idx, bool pickLast, int minSize, int gap)
     {
-        var edges  = new List<int>();
+        var edges = new List<int>();
         if (idx.Count == 0) return edges.ToArray();
 
         var groups = new List<List<int>> { new List<int> { idx[0] } };
@@ -283,17 +292,15 @@ public class MusicAnalyser : MonoBehaviour
         return s;
     }
 
-    static float[] ToMono(AudioClip clip)
+    static float[] ToMono(float[] raw, int channels, int sampleCount)
     {
-        float[] raw = new float[clip.samples * clip.channels];
-        clip.GetData(raw, 0);
-        if (clip.channels == 1) return raw;
-        float[] mono = new float[clip.samples];
-        for (int i = 0; i < clip.samples; i++)
+        if (channels == 1) return raw;
+        float[] mono = new float[sampleCount];
+        for (int i = 0; i < sampleCount; i++)
         {
             float s = 0f;
-            for (int c = 0; c < clip.channels; c++) s += raw[i * clip.channels + c];
-            mono[i] = s / clip.channels;
+            for (int c = 0; c < channels; c++) s += raw[i * channels + c];
+            mono[i] = s / channels;
         }
         return mono;
     }
@@ -317,18 +324,18 @@ public class MusicAnalyser : MonoBehaviour
                 float cr = 1f, ci = 0f;
                 for (int j = 0; j < len / 2; j++)
                 {
-                    float ur = re[i+j], ui = im[i+j];
-                    float vr = re[i+j+len/2]*cr - im[i+j+len/2]*ci;
-                    float vi = re[i+j+len/2]*ci + im[i+j+len/2]*cr;
-                    re[i+j] = ur+vr; im[i+j] = ui+vi;
-                    re[i+j+len/2] = ur-vr; im[i+j+len/2] = ui-vi;
-                    float nr = cr*wr - ci*wi; ci = cr*wi + ci*wr; cr = nr;
+                    float ur = re[i + j], ui = im[i + j];
+                    float vr = re[i + j + len / 2] * cr - im[i + j + len / 2] * ci;
+                    float vi = re[i + j + len / 2] * ci + im[i + j + len / 2] * cr;
+                    re[i + j] = ur + vr; im[i + j] = ui + vi;
+                    re[i + j + len / 2] = ur - vr; im[i + j + len / 2] = ui - vi;
+                    float nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
                 }
             }
         }
         float[] mag = new float[n / 2];
         for (int k = 0; k < n / 2; k++)
-            mag[k] = Mathf.Sqrt(re[k]*re[k] + im[k]*im[k]) / n;
+            mag[k] = Mathf.Sqrt(re[k] * re[k] + im[k] * im[k]) / n;
         return mag;
     }
 

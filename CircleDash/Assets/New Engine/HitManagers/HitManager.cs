@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HitManager : MonoBehaviour
 {
+    [SerializeField] public static bool CasualMode = false;
     [SerializeField] private GradesManager gradesManager;
     [SerializeField] private GameObject currentArrow;
     [SerializeField] private Animator[] plateAnimators;
@@ -26,7 +27,7 @@ public class HitManager : MonoBehaviour
     public void OnSuccessHit(int direction, int score, GameObject arrow)
     {
         circle.SetTrigger(direction.ToString());
-        bg.SetTrigger(direction.ToString());
+        // bg.SetTrigger(direction.ToString());
         plateAnimators[direction - 1].SetTrigger("Plate Hitted");
 
 
@@ -65,7 +66,7 @@ public class HitManager : MonoBehaviour
     public void OnUnsuccessHit(int direction)
     {
         circle.SetTrigger(direction.ToString());
-        bg.SetTrigger(direction.ToString());
+        // bg.SetTrigger(direction.ToString());
         plateAnimators[direction - 1].SetTrigger("Plate Hitted");
 
 

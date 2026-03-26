@@ -12,6 +12,8 @@ public class Score : MonoBehaviour
     private void Start()
     {
         scoreText = GetComponent<TextMeshProUGUI>();
+        score = 0;
+        scoreText.text = "0";
     }
 
     public static void AddScore(int hitScore)

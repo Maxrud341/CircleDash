@@ -26,13 +26,13 @@ public class ArrowGenerator : MonoBehaviour
 
     void OnSongEnd()
     {
-        // Debug.Log("Song has ended!");
+        Debug.Log("Song has ended!");
         songEnded = true;
     }
 
     void OnBitTriggered()
     {
-        if (num % 2 == 0 || FullSpeed)
+        if (num > 2 && (num % 2 == 0 || FullSpeed))
         {
             if (!songEnded)
             {

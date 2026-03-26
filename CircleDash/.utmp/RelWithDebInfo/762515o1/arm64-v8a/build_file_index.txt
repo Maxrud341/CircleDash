@@ -1,0 +1,2 @@
+C:\unity\CircleDash\CircleDash\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+C:\unity\CircleDash\CircleDash\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\FramePacing\CMakeLists.txt

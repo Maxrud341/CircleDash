@@ -2,11 +2,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 
 public class PauseManager : MonoBehaviour
 {
     public bool isCustomMap;
+    public GameObject loadingScreen;
     public RhythmEngine rhythmEngine;
     public RhythmManager rhythmManager;
     public GameObject menuCanvas;
@@ -116,22 +118,59 @@ public class PauseManager : MonoBehaviour
     }
 
     public Animator fadeBlack;
-    void Start()
+    void Start() => StartCoroutine(InitRoutine());
+
+    IEnumerator InitRoutine()
     {
+        Time.timeScale = 0f;
+
         if (isCustomMap)
         {
             if (needToAnalyseMap)
             {
-                (sections, bpm) = MusicAnalyser.AnalyseClip(CustomMapManager.LoadedClip);
+                loadingScreen.SetActive(true);
 
+                // Всё что касается AudioClip — на главном потоке
+                float[] rawSamples = new float[CustomMapManager.LoadedClip.samples * CustomMapManager.LoadedClip.channels];
+                CustomMapManager.LoadedClip.GetData(rawSamples, 0);
+                int ch = CustomMapManager.LoadedClip.channels;
+                int freq = CustomMapManager.LoadedClip.frequency;
+                int sampleCount = CustomMapManager.LoadedClip.samples;
+                int bpmResult = UniBpmAnalyzer.AnalyzeBpm(CustomMapManager.LoadedClip);
+
+                bool done = false;
+                new Thread(() =>
+                {
+                    sections = MusicAnalyser.Analyse(rawSamples, ch, sampleCount, freq,
+                                2048, 512, 120, 64, 20f, 0.6f, 300, 1.6f, 15, 50, 5f, 2f);
+                    bpm = bpmResult;
+
+                    done = true;
+                }).Start();
+
+                while (!done) yield return null;
+
+                loadingScreen.SetActive(false);
+                needToAnalyseMap = false;
+            }
+            else
+            {
+                Debug.Log("Analysis skipped (needToAnalyseMap=false)");
             }
 
+            Debug.Log("Applying map data to rhythm engine...");
+            if (bpm < 100) bpm *= 2;
+            if (bpm > 180) bpm /= 2;
             rhythmEngine.bpm = bpm;
             rhythmEngine.songClip = CustomMapManager.LoadedClip;
             rhythmManager.X2_Sections = sections;
-            needToAnalyseMap = false;
             Debug.Log($"Map analysed: BPM={bpm}, Sections count={sections.Count}");
+        }
 
+        Time.timeScale = 1f;
+
+        if (isCustomMap)
+        {
             rhythmEngine.StartGame();
             rhythmManager.StartRhythmManager();
         }
@@ -140,10 +179,10 @@ public class PauseManager : MonoBehaviour
             rhythmEngine.StartGame();
             rhythmManager.StartRhythmManager();
         }
+
         fadeBlack.updateMode = AnimatorUpdateMode.UnscaledTime;
         fadeBlack.SetTrigger("StartOut");
     }
-
     public void FadeIn()
     {
         fadeBlack.SetTrigger("IN");

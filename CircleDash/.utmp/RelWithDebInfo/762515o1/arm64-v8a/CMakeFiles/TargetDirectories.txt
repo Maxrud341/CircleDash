@@ -1,0 +1,5 @@
+C:/unity/CircleDash/CircleDash/.utmp/RelWithDebInfo/762515o1/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/unity/CircleDash/CircleDash/.utmp/RelWithDebInfo/762515o1/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/unity/CircleDash/CircleDash/.utmp/RelWithDebInfo/762515o1/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/unity/CircleDash/CircleDash/.utmp/RelWithDebInfo/762515o1/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+C:/unity/CircleDash/CircleDash/.utmp/RelWithDebInfo/762515o1/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir

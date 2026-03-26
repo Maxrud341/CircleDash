@@ -11060,7 +11060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectSwipeOnlyAfterRelease: 1
-  minSwipeDistance: 5
+  minSwipeDistance: 20
 --- !u!1 &220074871
 GameObject:
   m_ObjectHideFlags: 0
@@ -11397,6 +11397,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee910efbdbe7e98419d332382b9843db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCustomMap: 0
+  loadingScreen: {fileID: 0}
+  rhythmEngine: {fileID: 488371587}
+  rhythmManager: {fileID: 351902874}
   menuCanvas: {fileID: 1645970247}
   LoseCanv: {fileID: 833151507}
   WinCanv: {fileID: 811480083}
@@ -11583,10 +11587,8 @@ MonoBehaviour:
   rhythmEngine: {fileID: 488371587}
   audioSource: {fileID: 1957868129}
   X2_Sections:
-  - {x: 47.14812, y: 66.61805}
-  - {x: 111.1539, y: 146.8198}
-  - {x: 176.6922, y: 225.6399}
-  - {x: 253.5271, y: 304.9361}
+  - {x: 15, y: 31}
+  - {x: 52, y: 67}
 --- !u!1 &376366631
 GameObject:
   m_ObjectHideFlags: 0
@@ -16966,12 +16968,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   accuracy2: 0
   steps: 1
-  bpm: 120
-  levelDuration: 300
+  bpm: 124
+  levelDuration: 80
   onBitAccuracy: 0.55
-  latency: 0.05
+  latency: 0
   audioSource: {fileID: 1957868129}
-  songClip: {fileID: 8300000, guid: b284b74190e8f844ab86161c13c78c60, type: 3}
+  songClip: {fileID: 8300000, guid: 1df1631f11052bc48b254d5a38ca8ecf, type: 3}
 --- !u!1 &492853513
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,7 @@ public class Combo : MonoBehaviour
         comboText = GetComponent<TextMeshProUGUI>();
         particleSystemsStatic = particleSystems;
         audioSourceStatic = audioSource;
+        ResetCombo();
     }
     public static void AddCombo()
     {
@@ -37,7 +38,7 @@ public class Combo : MonoBehaviour
             foreach (ParticleSystem particle in particleSystemsStatic)
             {
                 audioSourceStatic.Play();
-                particle.Play();
+                // particle.Play();
             }
             comboText.text = maxCombo.ToString() + "X";
         }

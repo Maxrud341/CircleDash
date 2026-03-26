@@ -51,7 +51,7 @@ public class RhythmEngine : MonoBehaviour
         accuracy2 = accuracy;
         boolOnBit = accuracy >= 1f - onBitAccuracy;
 
-        if (!songEnded && SongTime >= levelDuration)
+        if (!songEnded && (SongTime >= levelDuration || SongTime >= songClip.length-10f))
         {
             songEnded = true;
             OnSongEndEvent?.Invoke();
