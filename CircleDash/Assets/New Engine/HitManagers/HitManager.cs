@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+
 public class HitManager : MonoBehaviour
 {
     [SerializeField] public static bool CasualMode = false;
@@ -10,12 +11,15 @@ public class HitManager : MonoBehaviour
     [SerializeField] private Animator[] plateAnimators;
     [SerializeField] private ParticleSystem[] PlatePS;
     [SerializeField] private ParticleSystem ArrowPS;
-
     [SerializeField] private AudioSource SuccessAS;
     [SerializeField] private AudioClip Success1;
     [SerializeField] private AudioClip Success2;
-
     [SerializeField] private AudioSource UnSuccessAS;
+
+#if UNITY_ANDROID
+    private int successSoundId = -1;
+    private int unsuccessSoundId = -1;
+#endif
     private int num = 0;
 
 
@@ -24,6 +28,15 @@ public class HitManager : MonoBehaviour
     [SerializeField] private float missCooldown = 3f;
     [SerializeField] private bool isOnCooldown = false;
 
+
+    void Start()
+    {
+#if UNITY_ANDROID
+        AndroidNativeAudio.makePool(2);
+        successSoundId = AndroidNativeAudio.load("Success.wav");
+        unsuccessSoundId = AndroidNativeAudio.load("Unsuccessful.mp3");
+#endif
+    }
     public void OnSuccessHit(int direction, int score, GameObject arrow)
     {
         circle.SetTrigger(direction.ToString());
@@ -50,7 +63,12 @@ public class HitManager : MonoBehaviour
         //     SuccessAS.clip = Success2;  
         // }
         // num++;
-        SuccessAS.Play();
+#if UNITY_ANDROID
+        AndroidNativeAudio.play(successSoundId);
+#endif
+#if UNITY_EDITOR
+    SuccessAS.Play();
+#endif
 
         if (RhythmEngine.boolOnBit)
         {
@@ -94,7 +112,12 @@ public class HitManager : MonoBehaviour
             return;
         }
         gradesManager.CreateMissGrade();
+#if UNITY_ANDROID
+        AndroidNativeAudio.play(unsuccessSoundId);
+#endif
+#if UNITY_EDITOR
         UnSuccessAS.Play();
+#endif
         Combo.ResetCombo();
         Lives.RemoveLife();
 
