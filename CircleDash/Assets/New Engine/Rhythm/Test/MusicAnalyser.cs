@@ -28,7 +28,7 @@ public class MusicAnalyser : MonoBehaviour
 
     [Header("Фильтрация участков")]
     public float minDuration = 5f;
-    public float expandSec = 2f;
+    public float expandSec = 0f;
 
     public RhythmManager manager;
     public int bpm;
@@ -70,7 +70,25 @@ public class MusicAnalyser : MonoBehaviour
         Debug.Log($"Analyzed BPM: {bpm}");
         if (bpm < 100) bpm *= 2;
         if (bpm > 200) bpm /= 2;
+
+        sections = SnapSectionsToNearestBeat(sections, bpm);
         return (sections, bpm);
+    }
+
+    public static List<Vector2> SnapSectionsToNearestBeat(List<Vector2> sections, float bpm)
+    {
+        if (sections == null || bpm <= 0f) return sections;
+
+        float beatDuration = 60f / bpm;
+        for (int i = 0; i < sections.Count; i++)
+        {
+            Vector2 section = sections[i];
+            float start = Mathf.Round(section.x / beatDuration) * beatDuration;
+            float end = Mathf.Round(section.y / beatDuration) * beatDuration;
+            sections[i] = new Vector2(start, end);
+        }
+
+        return sections;
     }
 
     public static List<Vector2> Analyse(

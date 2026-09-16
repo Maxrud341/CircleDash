@@ -145,7 +145,10 @@ public class PauseManager : MonoBehaviour
                                 2048, 512, 120, 64, 20f, 0.6f, 300, 1.6f, 15, 50, 5f, 2f);
                     bpm = bpmResult;
 
-                    done = true;
+                    if (bpm < 100) bpm *= 2;
+                    if (bpm > 180) bpm /= 2;
+
+                      done = true;
                 }).Start();
 
                 while (!done) yield return null;

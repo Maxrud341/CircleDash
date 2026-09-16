@@ -1,38 +1,31 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class VolumeSettings : MonoBehaviour
+public class VolumeSettings : BarSettings
 {
-    public AudioSource[] musicAS;
-    public float volumeLvl;
-    private Scrollbar scrollbar;
-    void Start()
+    public VolumeTypes volumeType;
+
+    protected override float GetLvl()
     {
-        scrollbar = GetComponent<Scrollbar>();
-
-        scrollbar.onValueChanged.AddListener(OnScrollbarChanged);
-        ChangeScrollbarValue();
-    }
-
-
-
-    void OnScrollbarChanged(float value)
-    {
-        volumeLvl = value;
-        ChangeVolume();
-    }
-
-
-    public void ChangeVolume()
-    {
-        foreach (AudioSource audioSource in musicAS)
+        if (volumeType == VolumeTypes.Music)
         {
-            audioSource.volume = volumeLvl;
+            return applySettings.musicVolume;
         }
+        else if (volumeType == VolumeTypes.SFX)
+        {
+            return applySettings.sfxVolume;
+        }
+        return 1f;
     }
 
-    public void ChangeScrollbarValue()
+    public override void ChangeSettings()
     {
-        scrollbar.value = volumeLvl;  
+        applySettings.ApplyVolume(settingsLvl, volumeType);
+        Debug.Log($"[VolumeSettings] ChangeSettings called, setting volume to: {settingsLvl}");
     }
+}
+
+public enum VolumeTypes
+{
+    Music,
+    SFX
 }

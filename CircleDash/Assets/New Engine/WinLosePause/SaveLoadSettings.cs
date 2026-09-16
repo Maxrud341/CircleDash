@@ -1,35 +1,38 @@
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 [System.Serializable]
-public class SoundSettingsData
+public class SettingsData
 {
-    public float[] soundLevels;
+    public float musicVolume;
+    public float sfxVolume;
+    public float latency;
 }
 
 public class SaveLoadSettings : MonoBehaviour
 {
-    public VolumeSettings[] volumeSettings;
+    public ApplySettings applySettings;
     private string filePath;
 
-    void Awake()
+    private void Awake()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "soundSettings.json");
+        filePath = Path.Combine(Application.persistentDataPath, "settings.json");
         LoadSettings();
     }
 
+
     public void SaveSettings()
     {
-        SoundSettingsData data = new SoundSettingsData();
-        data.soundLevels = new float[volumeSettings.Length];
-        
-        for (int i = 0; i < volumeSettings.Length; i++)
+        SettingsData data = new SettingsData
         {
-            data.soundLevels[i] = volumeSettings[i].volumeLvl;
-        }
-        
+            musicVolume = applySettings.musicVolume,
+            sfxVolume = applySettings.sfxVolume,
+            latency = applySettings.latency
+        };
+
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(filePath, json);
+        Debug.Log("Settings saved to: " + filePath);
     }
 
     public void LoadSettings()
@@ -37,35 +40,34 @@ public class SaveLoadSettings : MonoBehaviour
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
-            if (!string.IsNullOrEmpty(json))
-            {
-                SoundSettingsData data = JsonUtility.FromJson<SoundSettingsData>(json);
-                
-                for (int i = 0; i < volumeSettings.Length; i++)
-                {
-                    if (i < data.soundLevels.Length)
-                    {
-                        volumeSettings[i].volumeLvl = data.soundLevels[i];
-                    }
-                    else
-                    {
-                        volumeSettings[i].volumeLvl = 1.0f;
-                    }
-                    volumeSettings[i].ChangeVolume();
-                }
-                return;
-            }
+            SettingsData data = JsonUtility.FromJson<SettingsData>(json);
+
+            applySettings.musicVolume = data.musicVolume;
+            applySettings.sfxVolume = data.sfxVolume;
+            applySettings.latency = data.latency;
+
+            applySettings.ApplyAllSettings();
+            Debug.Log("Settings loaded from: " + filePath);
         }
-        
-        // Если файла нет или он пуст, создаем его с дефолтными значениями
-        SoundSettingsData defaultData = new SoundSettingsData { soundLevels = new float[] { 1.0f, 1.0f } };
-        string defaultJson = JsonUtility.ToJson(defaultData, true);
-        File.WriteAllText(filePath, defaultJson);
-        
-        for (int i = 0; i < volumeSettings.Length; i++)
+        else
         {
-            volumeSettings[i].volumeLvl = 1.0f;
-            volumeSettings[i].ChangeVolume();
+            CreateDefaultSettingsFile();
+            applySettings.ApplyAllSettings();
+            Debug.Log("Settings file not found. Default settings file created.");
         }
+    }
+
+    public void CreateDefaultSettingsFile()
+    {
+        SettingsData defaultData = new SettingsData
+        {
+            musicVolume = applySettings.musicVolume,
+            sfxVolume = applySettings.sfxVolume,
+            latency = applySettings.latency
+        };
+
+        string json = JsonUtility.ToJson(defaultData, true);
+        File.WriteAllText(filePath, json);
+        Debug.Log("Default settings file created at: " + filePath);
     }
 }

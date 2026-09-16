@@ -14,6 +14,7 @@ public class CustomMapManager : MonoBehaviour
     public GameObject loadMenu;
     public GameObject maps;
     public TMP_Text errorText;
+    
 
     async void Start()
     {

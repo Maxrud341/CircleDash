@@ -8,7 +8,8 @@ public class RhythmEngine : MonoBehaviour
     [SerializeField] public float bpm;
     [SerializeField] private float levelDuration;
     [SerializeField] private float onBitAccuracy;
-    [SerializeField] private float latency = 0f; // в секундах, + если игрок жмёт поздно, - если рано
+    [SerializeField] public float latency = 0f; // в секундах, + если игрок жмёт поздно, - если рано
+    [SerializeField] public float mapLatency = 0f;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] public AudioClip songClip;
 
