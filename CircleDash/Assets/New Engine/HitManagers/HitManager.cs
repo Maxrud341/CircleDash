@@ -172,9 +172,5 @@ public class HitManager : MonoBehaviour
             Debug.Log("Miss");
             OnUnsuccessHit(direction);
         }
-
-
     }
-
-
 }

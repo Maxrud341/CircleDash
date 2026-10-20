@@ -3,16 +3,16 @@ using System;
 
 public class RhythmEngine : MonoBehaviour
 {
+    public MapManager mapManager;
     public float accuracy2;
-    [SerializeField] private float steps;
+    [SerializeField] public float steps;
     [SerializeField] public float bpm;
-    [SerializeField] private float levelDuration;
-    [SerializeField] private float onBitAccuracy;
+    [SerializeField] public float levelDuration;
+    [SerializeField] public float onBitAccuracy;
     [SerializeField] public float latency = 0f; // в секундах, + если игрок жмёт поздно, - если рано
     [SerializeField] public float mapLatency = 0f;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] public AudioClip songClip;
-
 
     public static float accuracy;
     public static bool boolOnBit;
@@ -32,6 +32,16 @@ public class RhythmEngine : MonoBehaviour
 
     public void StartGame()
     {
+        if (mapManager != null)
+        {
+            bpm = mapManager.bpm;
+            songClip = mapManager.songClip;
+            levelDuration = mapManager.levelDuration; 
+        }
+
+        if (songClip == null)
+            return;
+
         bitDelay = 60f / bpm;
         songClip.LoadAudioData();
         audioSource.clip = songClip;

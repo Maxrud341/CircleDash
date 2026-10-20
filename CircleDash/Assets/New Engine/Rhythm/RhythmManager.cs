@@ -7,11 +7,15 @@ public class RhythmManager : MonoBehaviour
     public ArrowGenerator arrowGenerator;
     public RhythmEngine rhythmEngine;
     public AudioSource audioSource;
+    public MapManager mapManager;
 
     public List<Vector2> X2_Sections; // Секции с включением FullSpeed
 
     public void StartRhythmManager()
     {
+        if (mapManager != null && (X2_Sections == null || X2_Sections.Count == 0))
+            X2_Sections = mapManager.X2_Sections;
+
         StartCoroutine(ManageFullSpeed());
     }
 

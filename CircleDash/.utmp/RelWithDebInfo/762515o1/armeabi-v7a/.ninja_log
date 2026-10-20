@@ -1,5 +1,3 @@
 # ninja log v5
-1	274	7958947654244595	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	29dcb7c91936c05c
-274	650	7958947658030290	C:/unity/CircleDash/CircleDash/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/762515o1/obj/armeabi-v7a/libswappywrapper.so	9cfde314712685a
-1	273	7963565464060080	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	29dcb7c91936c05c
-274	673	7963565468058270	C:/unity/CircleDash/CircleDash/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/762515o1/obj/armeabi-v7a/libswappywrapper.so	9cfde314712685a
+1	276	8142197849711134	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	4523ffc6a131375c
+277	666	8142197853607421	C:/unity/CircleDash/CircleDash/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/762515o1/obj/armeabi-v7a/libswappywrapper.so	add71a23abac0efe

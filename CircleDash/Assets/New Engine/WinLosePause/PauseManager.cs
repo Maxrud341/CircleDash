@@ -164,9 +164,23 @@ public class PauseManager : MonoBehaviour
             Debug.Log("Applying map data to rhythm engine...");
             if (bpm < 100) bpm *= 2;
             if (bpm > 180) bpm /= 2;
-            rhythmEngine.bpm = bpm;
-            rhythmEngine.songClip = CustomMapManager.LoadedClip;
-            rhythmManager.X2_Sections = sections;
+
+            if (FindObjectOfType<MapManager>() is MapManager mapManagerInstance)
+            {
+                mapManagerInstance.bpm = bpm;
+                mapManagerInstance.songClip = CustomMapManager.LoadedClip;
+                mapManagerInstance.levelDuration = CustomMapManager.LoadedClip ? CustomMapManager.LoadedClip.length : 0f;
+                mapManagerInstance.X2_Sections = sections;
+                mapManagerInstance.ApplyTo(rhythmEngine);
+                mapManagerInstance.ApplyTo(rhythmManager);
+            }
+            else
+            {
+                rhythmEngine.bpm = bpm;
+                rhythmEngine.songClip = CustomMapManager.LoadedClip;
+                rhythmManager.X2_Sections = sections;
+            }
+
             Debug.Log($"Map analysed: BPM={bpm}, Sections count={sections.Count}");
         }
 
